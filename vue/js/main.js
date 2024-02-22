@@ -20,7 +20,7 @@ Vue.component('to-do-app',{
     data() {
         return {
             tasks: [],
-            processedTask: null,
+            processedTask: [],
             completedTasks: []
         }
     },
@@ -47,9 +47,6 @@ Vue.component('to-do-app',{
         }
     }
 })
-
-
-
 
 Vue.component('task-create', {
     template:`
@@ -122,8 +119,6 @@ Vue.component('task-create', {
     }
 })
 
-
-
 Vue.component('task-on-start', {
     props: ['tasks'],
     template: `
@@ -132,7 +127,7 @@ Vue.component('task-on-start', {
                 <h3>{{ task.title }}</h3>
                 <ul>
                     <li v-for="item in task.items" :key="item.id">
-                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems"> 
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task)"> 
                         <p>{{ item.text }}</p>
                     </li>
                 </ul>
@@ -140,44 +135,41 @@ Vue.component('task-on-start', {
         </div>
     `,
     methods: {
-        checkItems() {
-            // Calculate checked items percentage
-            let totalItems = this.tasks.flatMap(task => task.items).length;
-            let checkedItems = this.tasks.flatMap(task => task.items).filter(item => item.checked).length;
+        checkItems(task) {
+            // Calculate checked items percentage for a specific task
+            let totalItems = task.items.length;
+            let checkedItems = task.items.filter(item => item.checked).length;
 
             let percentage = (checkedItems / totalItems) * 100;
 
             if (percentage > 50) {
                 // Transfer the task to task-process component
-                let taskToMove = this.tasks.pop(); // Remove the task from the array
-                this.$emit('transfer-task', taskToMove);
+                const index = this.tasks.findIndex(t => t === task);
+                if (index !== -1) {
+                    this.$emit('transfer-task', this.tasks.splice(index, 1)[0]); // Remove the task from the array
+                }
             }
         }
+
     }
 })
 
-
 Vue.component('task-process', {
-    props: ['task', 'completedTasks'],
+    props: ['completedTasks'],
     template: `
         <div class="task-process">
-            <h3>{{ task.title }}</h3>
-            <ul>
-                <li v-for="item in task.items" :key="item.id">
-                    <p :class="{ 'completed': item.checked }">{{ item.text }}</p>
-                </li>
-            </ul>
-            <h4>Completed Tasks:</h4>
-            <ul>
-                <li v-for="completedTask in completedTasks" :key="completedTask.title">
-                    <p>{{ completedTask.title }}</p>
-                </li>
-            </ul>
+            <div v-for="completedTask in completedTasks" :key="completedTask.title">
+                <h3>{{ completedTask.title }}</h3>
+                <ul>
+                    <li v-for="item in completedTask.items" :key="item.id">
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(completedTask, item)">
+                        <p :class="{ 'completed': item.checked }">{{ item.text }}</p>
+                    </li>
+                </ul>
+            </div>
         </div>
     `
 })
-
-
 
 
 let app = new Vue({

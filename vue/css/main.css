@@ -1,48 +1,48 @@
-/*body {*/
-/*    font-family: tahoma;*/
-/*    color:#282828;*/
-/*    margin: 0px;*/
-/*    padding: 0;*/
-/*}*/
+body {
+    font-family: tahoma;
+    color:#282828;
+    margin: 0px;
+    padding: 0;
+}
 
-/*header{*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: center;*/
-/*}*/
+header{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-/*.create-task{*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    align-items: center;*/
-/*    gap: 5px;*/
-/*}*/
+.create-task{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
 
-/*.task{*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    width: 300px;*/
-/*    gap: 5px;*/
-/*    word-wrap: break-word;*/
-/*}*/
+.task{
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    gap: 5px;
+    word-wrap: break-word;
+}
 
-/*.task > ul > li{*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    word-wrap: break-word;*/
-/*}*/
+.task > ul > li{
+    display: flex;
+    align-items: center;
+    word-wrap: break-word;
+}
 
-/*.task > ul, p{*/
-/*    margin: 1px;*/
-/*    padding: 0px;*/
-/*}*/
+.task > ul, p{
+    margin: 1px;
+    padding: 0px;
+}
 
-/*.task > h3{*/
-/*    margin-bottom: 5px;*/
-/*}*/
+.task > h3{
+    margin-bottom: 5px;
+}
 
-/*.tasks{*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    gap: 20px;*/
-/*}*/
+.tasks{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
