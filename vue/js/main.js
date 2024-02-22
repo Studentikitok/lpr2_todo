@@ -8,29 +8,48 @@ Vue.component('to-do-app',{
             </header>
             <main>
                 <div class="tasks">
-                    <task-on-start :tasks="tasks"></task-on-start>
+                    <task-on-start :tasks="tasks" @transfer-task="moveTaskToProcess"></task-on-start>
                 </div>
                 <div class="tasks">
-                    <task-process></task-process>
-                </div>
-                
+                    <task-process v-if="processedTask || completedTasks.length > 0" 
+                                  :task="processedTask" :completed-tasks="completedTasks"></task-process>
+                </div>             
             </main>
         </div>  
     `,
     data() {
         return {
-            tasks: []
+            tasks: [],
+            processedTask: null,
+            completedTasks: []
         }
     },
     methods: {
         addTask(taskData) {
             this.tasks.push({
                 title: taskData.title,
-                items: taskData.items
+                items: taskData.items.map(item => ({...item, checked: false}))
             });
+        },
+        moveTaskToProcess(task) {
+            // Убираем задание из основного списка
+            const index = this.tasks.findIndex(t => t === task);
+            if (index !== -1) {
+                this.tasks.splice(index, 1);
+            }
+
+            this.processedTask = task;
+            // Проверяем выполнение 50% задания
+            let countChecked = task.items.filter(item => item.checked).length;
+            if (countChecked >= Math.ceil(task.items.length / 2)) {
+                this.completedTasks.push(task);
+            }
         }
     }
 })
+
+
+
 
 Vue.component('task-create', {
     template:`
@@ -39,9 +58,10 @@ Vue.component('task-create', {
             <input type="text" v-model="itemOne" placeholder="Item one">
             <input type="text" v-model="itemTwo" placeholder="Item two">
             <input type="text" v-model="itemThree" placeholder="Item three">
-            <input type="text" v-model="itemFour" placeholder="Item four">
-            <input type="text" v-model="itemFive" placeholder="Item five">
-            <button @click="createTask" :disabled="taskCount >= 3">Create task</button>
+            <input type="text" v-model="itemFour" v-if="itemThree !== '' && itemThree !== null" placeholder="Item four">
+            <input type="text" v-model="itemFive" v-if="itemFour !== '' && itemFour !== null" placeholder="Item five">
+            <button @click="createTask" >Create task</button>
+<!--            :disabled="disabledButton"-->
         </div>
     `,
     props: ['taskCount'],
@@ -56,21 +76,53 @@ Vue.component('task-create', {
         }
     },
     methods: {
+        // disabledButton(){
+        //     if(this.taskCount >= 3 || this.title === '' || this.itemOne === '' || this.itemTwo === '' || this.itemThree === ''){
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // },
         createTask() {
+            const items = [
+                { id: 1, text: this.itemOne }
+            ];
+
+            if (this.itemTwo.trim() !== '') {
+                items.push({ id: 2, text: this.itemTwo });
+            }
+
+            if (this.itemThree.trim() !== '') {
+                items.push({ id: 3, text: this.itemThree });
+            }
+
+            if (this.itemFour.trim() !== '') {
+                items.push({ id: 4, text: this.itemFour });
+            }
+
+            if (this.itemFive.trim() !== '') {
+                items.push({ id: 5, text: this.itemFive });
+            }
+
             const taskData = {
                 title: this.title,
-                items: [
-                    { id: 1, text: this.itemOne },
-                    { id: 2, text: this.itemTwo },
-                    { id: 3, text: this.itemThree },
-                    { id: 4, text: this.itemFour },
-                    { id: 5, text: this.itemFive }
-                ]
+                items: items
             }
             this.$emit('create-task', taskData);
+            this.cleanTask();
+        },
+        cleanTask() {
+            this.title = '';
+            this.itemOne = '';
+            this.itemTwo = '';
+            this.itemThree = '';
+            this.itemFour = '';
+            this.itemFive = '';
         }
     }
 })
+
+
 
 Vue.component('task-on-start', {
     props: ['tasks'],
@@ -80,16 +132,53 @@ Vue.component('task-on-start', {
                 <h3>{{ task.title }}</h3>
                 <ul>
                     <li v-for="item in task.items" :key="item.id">
-                        <input type="checkbox" :id="item.id"> <p>{{ item.text }}</p>
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems"> 
+                        <p>{{ item.text }}</p>
                     </li>
                 </ul>
             </div>
         </div>
     `,
-    methods:{
+    methods: {
+        checkItems() {
+            // Calculate checked items percentage
+            let totalItems = this.tasks.flatMap(task => task.items).length;
+            let checkedItems = this.tasks.flatMap(task => task.items).filter(item => item.checked).length;
 
+            let percentage = (checkedItems / totalItems) * 100;
+
+            if (percentage > 50) {
+                // Transfer the task to task-process component
+                let taskToMove = this.tasks.pop(); // Remove the task from the array
+                this.$emit('transfer-task', taskToMove);
+            }
+        }
     }
 })
+
+
+Vue.component('task-process', {
+    props: ['task', 'completedTasks'],
+    template: `
+        <div class="task-process">
+            <h3>{{ task.title }}</h3>
+            <ul>
+                <li v-for="item in task.items" :key="item.id">
+                    <p :class="{ 'completed': item.checked }">{{ item.text }}</p>
+                </li>
+            </ul>
+            <h4>Completed Tasks:</h4>
+            <ul>
+                <li v-for="completedTask in completedTasks" :key="completedTask.title">
+                    <p>{{ completedTask.title }}</p>
+                </li>
+            </ul>
+        </div>
+    `
+})
+
+
+
 
 let app = new Vue({
     el: '#app'
