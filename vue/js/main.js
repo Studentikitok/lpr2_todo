@@ -65,6 +65,11 @@ Vue.component('to-do-app',{
                 this.finishedTasks.push(task);
             }
         }
+    },
+    computed:{
+        isTaskLimitReached(){
+            return this.tasks.length >= 3;
+        }
     }
 })
 
@@ -77,10 +82,15 @@ Vue.component('task-create', {
             <input type="text" v-model="itemThree" placeholder="Item three">
             <input type="text" v-model="itemFour" v-if="itemThree !== '' && itemThree !== null" placeholder="Item four">
             <input type="text" v-model="itemFive" v-if="itemFour !== '' && itemFour !== null" placeholder="Item five">
-            <button @click="createTask" >Create task</button>
-<!--            :disabled="disabledButton"-->
+            <button @click="createTask" :disabled="isTaskLimitReached ">Create task</button>
+<!--            disabledButton || -->
         </div>
     `,
+    computed:{
+        isTaskLimitReached(){
+            return this.$parent.isTaskLimitReached;
+        }
+    },
     props: ['taskCount'],
     data() {
         return {
@@ -94,7 +104,7 @@ Vue.component('task-create', {
     },
     methods: {
         // disabledButton(){
-        //     if(this.taskCount >= 3 || this.title === '' || this.itemOne === '' || this.itemTwo === '' || this.itemThree === ''){
+        //     if(this.title === '' || this.itemOne === '' || this.itemTwo === '' || this.itemThree === ''){
         //         return true;
         //     } else {
         //         return false;
