@@ -3,6 +3,8 @@ body {
     color:#282828;
     margin: 0px;
     padding: 0;
+
+    color: #3BBFCB;
 }
 
 header{
@@ -16,6 +18,7 @@ header{
     flex-direction: column;
     align-items: center;
     gap: 5px;
+    margin-bottom: 1em;
 }
 
 .task{
@@ -45,4 +48,14 @@ header{
     display: flex;
     justify-content: center;
     gap: 20px;
+    width: 400px;
+}
+
+main{
+    display: flex;
+    justify-content: center;
+}
+
+header{
+    background-color: #626E93;
 }

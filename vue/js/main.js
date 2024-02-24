@@ -12,8 +12,14 @@ Vue.component('to-do-app',{
                 </div>
                 <div class="tasks">
                     <task-process v-if="processedTask || completedTasks.length > 0" 
-                                  :task="processedTask" :completed-tasks="completedTasks"></task-process>
-                </div>             
+                                  :task="processedTask" :completed-tasks="completedTasks"
+                                  @transfer-task="moveTaskToFinish">
+                                  </task-process>
+                </div>
+                <div class="tasks">
+                    <task-finish v-if="completedTasks || finishedTasks.length > 0"
+                                :task="completedTasks" :finished-tasks="finishedTasks"></task-finish>
+                </div>
             </main>
         </div>  
     `,
@@ -21,7 +27,8 @@ Vue.component('to-do-app',{
         return {
             tasks: [],
             processedTask: [],
-            completedTasks: []
+            completedTasks: [],
+            finishedTasks: []
         }
     },
     methods: {
@@ -43,6 +50,19 @@ Vue.component('to-do-app',{
             let countChecked = task.items.filter(item => item.checked).length;
             if (countChecked >= Math.ceil(task.items.length / 2)) {
                 this.completedTasks.push(task);
+            }
+        },
+        moveTaskToFinish(task){
+            const index = this.tasks.findIndex(t => t === task);
+            if (index !== -1){
+                this.tasks.splice(index, 1);
+            }
+
+            this.finishedTask= task;
+            // check 100% complete
+            let countChecked = task.items.filter(item => item.checked).length;
+            if(countChecked = task.items.length){
+                this.finishedTasks.push(task);
             }
         }
     }
@@ -123,6 +143,7 @@ Vue.component('task-on-start', {
     props: ['tasks'],
     template: `
         <div>
+            <h3>New task</h3>
             <div v-for="task in tasks" :key="task.title" class="task">
                 <h3>{{ task.title }}</h3>
                 <ul>
@@ -155,22 +176,66 @@ Vue.component('task-on-start', {
 })
 
 Vue.component('task-process', {
-    props: ['completedTasks'],
+    props: ['completedTasks', 'tasks'],
     template: `
         <div class="task-process">
-            <div v-for="completedTask in completedTasks" :key="completedTask.title">
+            <h3>Task processed</h3>
+            <div v-for="completedTask in completedTasks" :key="completedTask.title" class="task">
                 <h3>{{ completedTask.title }}</h3>
                 <ul>
                     <li v-for="item in completedTask.items" :key="item.id">
-                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(completedTask, item)">
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(completedTask, item); checkItems(completedTask)">
                         <p :class="{ 'completed': item.checked }">{{ item.text }}</p>
                     </li>
                 </ul>
             </div>
         </div>
-    `
+    `,
+    methods:{
+        checkItems(completedTask) {
+            // Calculate checked items percentage for a specific task
+            let totalItems = completedTask.items.length;
+            let checkedItems = completedTask.items.filter(item => item.checked).length;
+
+            let percentage = (checkedItems / totalItems) * 100;
+
+            if (percentage === 100) {
+                // Transfer the task to task-process component
+                const index = this.completedTasks.findIndex(c => c === completedTask);
+                if (index !== -1) {
+                    this.$emit('transfer-task', this.completedTasks.splice(index, 1)[0]); // Remove the task from the array
+                }
+            }
+        }
+    }
 })
 
+Vue.component('task-finish',{
+    props:['finishedTasks'],
+    template: `
+        <div class="task-finish">
+            <h3>Task finish</h3>
+            <div v-for="finishedTask in finishedTasks" :key="finishedTask.title" class="task">
+                <h3>{{ finishedTask.title }}</h3>
+                <ul>
+                    <li v-for="item in finishedTask.items" :key="item.id">
+                        <p>{{ item.text }}</p>
+                    </li>
+                </ul>
+                <p>Date completed: {{ formatDate(finishedTask.dateCompleted) }}</p>
+            </div>
+        </div>
+    `,
+    methods:{
+        formatDate(date){
+            const options = {
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            };
+            return date ? date.toLocaleString('ru-RU', options) : '';
+        }
+
+    }
+})
 
 let app = new Vue({
     el: '#app'
