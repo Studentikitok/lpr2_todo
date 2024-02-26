@@ -82,7 +82,7 @@ Vue.component('task-create', {
             <input type="text" v-model="itemThree" placeholder="Item three">
             <input type="text" v-model="itemFour" v-if="itemThree !== '' && itemThree !== null" placeholder="Item four">
             <input type="text" v-model="itemFive" v-if="itemFour !== '' && itemFour !== null" placeholder="Item five">
-            <button @click="createTask" :disabled="isTaskLimitReached ">Create task</button>
+            <button @click="createTask" v-if="title !== '' && itemOne !== '' && itemTwo !== '' && itemThree !== ''" :disabled="isTaskLimitReached ">Create task</button>
 <!--            disabledButton || -->
         </div>
     `,
