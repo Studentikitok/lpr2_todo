@@ -11,14 +11,10 @@ Vue.component('to-do-app',{
                     <task-on-start :tasks="tasks" :completedTasks="completedTasks" @transfer-task="moveTaskToProcess"></task-on-start>
                 </div>
                 <div class="tasks">
-                    <task-process v-if="processedTask || completedTasks.length > 0" 
-                                  :task="processedTask" :completed-tasks="completedTasks"
-                                  @transfer-task="moveTaskToFinish">
-                                  </task-process>
+                    <task-process v-if="processedTask || completedTasks.length > 0" :task="processedTask" :completed-tasks="completedTasks" @transfer-task="moveTaskToFinish"></task-process>
                 </div>
                 <div class="tasks">
-                    <task-finish v-if="completedTasks || finishedTasks.length > 0"
-                                :task="completedTasks" :finished-tasks="finishedTasks"></task-finish>
+                    <task-finish v-if="completedTasks || finishedTasks.length > 0" :task="completedTasks" :finished-tasks="finishedTasks"></task-finish>
                 </div>
             </main>
         </div>  
@@ -34,19 +30,19 @@ Vue.component('to-do-app',{
     watch: {
         tasks: {
             handler(newTasks) {
-                localStorage.setItem('tasks', JSON.stringify(newTasks)); // Сохраняем задачи в localStorage при изменении
+                localStorage.setItem('tasks', JSON.stringify(newTasks));
             },
             deep: true
         },
         completedTasks: {
             handler(newCompletedTasks) {
-                localStorage.setItem('completedTasks', JSON.stringify(newCompletedTasks)); // Сохраняем выполненные задачи
+                localStorage.setItem('completedTasks', JSON.stringify(newCompletedTasks));
             },
             deep: true
         },
         finishedTasks: {
             handler(newFinishedTasks) {
-                localStorage.setItem('finishedTasks', JSON.stringify(newFinishedTasks)); // Сохраняем завершенные задачи
+                localStorage.setItem('finishedTasks', JSON.stringify(newFinishedTasks));
             },
             deep: true
         }
@@ -59,14 +55,12 @@ Vue.component('to-do-app',{
             });
         },
         moveTaskToProcess(task) {
-            // Убираем задание из основного списка
             const index = this.tasks.findIndex(t => t === task);
             if (index !== -1) {
                 this.tasks.splice(index, 1);
             }
 
             this.processedTask = task;
-            // Проверяем выполнение 50% задания
             let countChecked = task.items.filter(item => item.checked).length;
             if (countChecked >= Math.ceil(task.items.length / 2)) {
                 this.completedTasks.push(task);
@@ -79,7 +73,6 @@ Vue.component('to-do-app',{
             }
 
             this.finishedTask= task;
-            // check 100% complete
             let countChecked = task.items.filter(item => item.checked).length;
             if(countChecked = task.items.length){
                 this.finishedTasks.push(task);
@@ -103,7 +96,6 @@ Vue.component('task-create', {
             <input type="text" v-model="itemFour" v-if="itemThree !== '' && itemThree !== null" placeholder="Item four">
             <input type="text" v-model="itemFive" v-if="itemFour !== '' && itemFour !== null" placeholder="Item five">
             <button @click="createTask" v-if="title !== '' && itemOne !== '' && itemTwo !== '' && itemThree !== ''" :disabled="isTaskLimitReached ">Create task</button>
-<!--            disabledButton || -->
         </div>
     `,
     computed:{
@@ -123,13 +115,6 @@ Vue.component('task-create', {
         }
     },
     methods: {
-        // disabledButton(){
-        //     if(this.title === '' || this.itemOne === '' || this.itemTwo === '' || this.itemThree === ''){
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // },
         createTask() {
             const items = [
                 { id: 1, text: this.itemOne }
@@ -187,7 +172,6 @@ Vue.component('task-on-start', {
     `,
     methods: {
         checkItems(task, completedTasks) {
-            // Calculate checked items percentage for a specific task
             let totalItems = task.items.length;
             let checkedItems = task.items.filter(item => item.checked).length;
 
@@ -195,14 +179,12 @@ Vue.component('task-on-start', {
 
             if (percentage > 50) {
                 if(completedTasks.length < 5){
-                    // Transfer the task to task-process component
                     const index = this.tasks.findIndex(t => t === task);
                     if (index !== -1) {
-                        this.$emit('transfer-task', this.tasks.splice(index, 1)[0]); // Remove the task from the array
+                        this.$emit('transfer-task', this.tasks.splice(index, 1)[0]);
                     }
                 } else {
                     alert("Task column full");
-                    // return this.item.checked="disabled";
                 }
             }
         }
@@ -227,17 +209,15 @@ Vue.component('task-process', {
     `,
     methods:{
         checkItems(completedTask) {
-            // Calculate checked items percentage for a specific task
             let totalItems = completedTask.items.length;
             let checkedItems = completedTask.items.filter(item => item.checked).length;
 
             let percentage = (checkedItems / totalItems) * 100;
 
             if (percentage === 100) {
-                // Transfer the task to task-process component
                 const index = this.completedTasks.findIndex(c => c === completedTask);
                 if (index !== -1) {
-                    this.$emit('transfer-task', this.completedTasks.splice(index, 1)[0]); // Remove the task from the array
+                    this.$emit('transfer-task', this.completedTasks.splice(index, 1)[0]);
                 }
             }
         }
