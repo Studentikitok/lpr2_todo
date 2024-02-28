@@ -8,7 +8,7 @@ Vue.component('to-do-app',{
             </header>
             <main>
                 <div class="tasks">
-                    <task-on-start :tasks="tasks" @transfer-task="moveTaskToProcess"></task-on-start>
+                    <task-on-start :tasks="tasks" :completedTasks="completedTasks" @transfer-task="moveTaskToProcess"></task-on-start>
                 </div>
                 <div class="tasks">
                     <task-process v-if="processedTask || completedTasks.length > 0" 
@@ -25,10 +25,30 @@ Vue.component('to-do-app',{
     `,
     data() {
         return {
-            tasks: [],
+            tasks: JSON.parse(localStorage.getItem('tasks')) || [],
             processedTask: [],
-            completedTasks: [],
-            finishedTasks: []
+            completedTasks: JSON.parse(localStorage.getItem('completedTasks')) || [],
+            finishedTasks: JSON.parse(localStorage.getItem('finishedTasks')) || []
+        }
+    },
+    watch: {
+        tasks: {
+            handler(newTasks) {
+                localStorage.setItem('tasks', JSON.stringify(newTasks)); // Сохраняем задачи в localStorage при изменении
+            },
+            deep: true
+        },
+        completedTasks: {
+            handler(newCompletedTasks) {
+                localStorage.setItem('completedTasks', JSON.stringify(newCompletedTasks)); // Сохраняем выполненные задачи
+            },
+            deep: true
+        },
+        finishedTasks: {
+            handler(newFinishedTasks) {
+                localStorage.setItem('finishedTasks', JSON.stringify(newFinishedTasks)); // Сохраняем завершенные задачи
+            },
+            deep: true
         }
     },
     methods: {
@@ -150,7 +170,7 @@ Vue.component('task-create', {
 })
 
 Vue.component('task-on-start', {
-    props: ['tasks'],
+    props: ['tasks', 'completedTasks'],
     template: `
         <div>
             <h3>New task</h3>
@@ -158,7 +178,7 @@ Vue.component('task-on-start', {
                 <h3>{{ task.title }}</h3>
                 <ul>
                     <li v-for="item in task.items" :key="item.id">
-                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task)"> 
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task, completedTasks)"> 
                         <p>{{ item.text }}</p>
                     </li>
                 </ul>
@@ -166,7 +186,7 @@ Vue.component('task-on-start', {
         </div>
     `,
     methods: {
-        checkItems(task) {
+        checkItems(task, completedTasks) {
             // Calculate checked items percentage for a specific task
             let totalItems = task.items.length;
             let checkedItems = task.items.filter(item => item.checked).length;
@@ -174,14 +194,18 @@ Vue.component('task-on-start', {
             let percentage = (checkedItems / totalItems) * 100;
 
             if (percentage > 50) {
-                // Transfer the task to task-process component
-                const index = this.tasks.findIndex(t => t === task);
-                if (index !== -1) {
-                    this.$emit('transfer-task', this.tasks.splice(index, 1)[0]); // Remove the task from the array
+                if(completedTasks.length < 5){
+                    // Transfer the task to task-process component
+                    const index = this.tasks.findIndex(t => t === task);
+                    if (index !== -1) {
+                        this.$emit('transfer-task', this.tasks.splice(index, 1)[0]); // Remove the task from the array
+                    }
+                } else {
+                    alert("Task column full");
+                    // return this.item.checked="disabled";
                 }
             }
         }
-
     }
 })
 
@@ -232,19 +256,16 @@ Vue.component('task-finish',{
                         <p>{{ item.text }}</p>
                     </li>
                 </ul>
-                <p>Date completed: {{ formatDate(finishedTask.dateCompleted) }}</p>
+                <p>Date completed: {{ finishTime(finishedTask) }}</p>
             </div>
         </div>
     `,
     methods:{
-        formatDate(date){
-            const options = {
-                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            };
-            return date ? date.toLocaleString('ru-RU', options) : '';
+        finishTime(finishedTask){
+            let timeNow = new Date();
+            return timeNow.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
-
-    }
+    },
 })
 
 let app = new Vue({
