@@ -11,10 +11,10 @@ Vue.component('to-do-app',{
                     <task-on-start :tasks="tasks" :completedTasks="completedTasks" @transfer-task="moveTaskToProcess"></task-on-start>
                 </div>
                 <div class="tasks">
-                    <task-process v-if="processedTask || completedTasks.length > 0" :task="processedTask" :completed-tasks="completedTasks" @transfer-task="moveTaskToFinish"></task-process>
+                    <task-process :task="processedTask" :completed-tasks="completedTasks" @transfer-task="moveTaskToFinish"></task-process>
                 </div>
                 <div class="tasks">
-                    <task-finish v-if="completedTasks || finishedTasks.length > 0" :task="completedTasks" :finished-tasks="finishedTasks"></task-finish>
+                    <task-finish :task="completedTasks" :finished-tasks="finishedTasks"></task-finish>
                 </div>
             </main>
         </div>  
@@ -75,6 +75,7 @@ Vue.component('to-do-app',{
             this.finishedTask= task;
             let countChecked = task.items.filter(item => item.checked).length;
             if(countChecked = task.items.length){
+                task.finishDate = new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'});
                 this.finishedTasks.push(task);
             }
         }
@@ -89,13 +90,14 @@ Vue.component('to-do-app',{
 Vue.component('task-create', {
     template:`
         <div class="create-task">
-            <input type="text" v-model="title" placeholder="Title">
-            <input type="text" v-model="itemOne" placeholder="Item one">
-            <input type="text" v-model="itemTwo" placeholder="Item two">
-            <input type="text" v-model="itemThree" placeholder="Item three">
-            <input type="text" v-model="itemFour" v-if="itemThree !== '' && itemThree !== null" placeholder="Item four">
-            <input type="text" v-model="itemFive" v-if="itemFour !== '' && itemFour !== null" placeholder="Item five">
+            <input type="text" v-model="title" placeholder="Заголовок">
+            <input type="text" v-model="itemOne" placeholder="Пункт один">
+            <input type="text" v-model="itemTwo" placeholder="Пункт два">
+            <input type="text" v-model="itemThree" placeholder="Пункт три">
+            <input type="text" v-model="itemFour" v-if="itemThree !== '' && itemThree !== null" placeholder="Пункт четыре">
+            <input type="text" v-model="itemFive" v-if="itemFour !== '' && itemFour !== null" placeholder="Пункт пять">
             <button @click="createTask" v-if="title !== '' && itemOne !== '' && itemTwo !== '' && itemThree !== ''" :disabled="isTaskLimitReached ">Create task</button>
+            <h4 v-if="isTaskLimitReached">Перед созданием новой задачи, выполните хотя бы одну задачу в первом столбце</h4>
         </div>
     `,
     computed:{
@@ -116,6 +118,13 @@ Vue.component('task-create', {
     },
     methods: {
         createTask() {
+            if (this.$parent.tasks.some(task => task.title === this.title) ||
+                this.$parent.completedTasks.some(task => task.title === this.title) ||
+                this.$parent.finishedTasks.some(task => task.title === this.title)) {
+                    alert("Задача с таким названием уже существует");
+                    return;
+            }
+
             const items = [
                 { id: 1, text: this.itemOne }
             ];
@@ -159,32 +168,40 @@ Vue.component('task-on-start', {
     template: `
         <div>
             <h3>New task</h3>
+            <h4 v-if="isTaskProcessFull">Перед тем, как выполнять задачи этого столбца, выполните хотя бы одну задачу второго столбца</h4>
             <div v-for="task in tasks" :key="task.title" class="task">
                 <h3>{{ task.title }}</h3>
                 <ul>
                     <li v-for="item in task.items" :key="item.id">
-                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task, completedTasks)"> 
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task, completedTasks)" :disabled="isTaskProcessFull"> 
                         <p>{{ item.text }}</p>
                     </li>
                 </ul>
             </div>
         </div>
     `,
+    computed: {
+        isTaskProcessFull() {
+            return this.completedTasks.length >= 5;
+        }
+    },
     methods: {
         checkItems(task, completedTasks) {
+            if (this.isTaskProcessFull) {
+                alert("Task column full");
+                item.checked = false;
+                return;
+            }
+
             let totalItems = task.items.length;
             let checkedItems = task.items.filter(item => item.checked).length;
 
             let percentage = (checkedItems / totalItems) * 100;
 
             if (percentage > 50) {
-                if(completedTasks.length < 5){
-                    const index = this.tasks.findIndex(t => t === task);
-                    if (index !== -1) {
-                        this.$emit('transfer-task', this.tasks.splice(index, 1)[0]);
-                    }
-                } else {
-                    alert("Task column full");
+                const index = this.tasks.findIndex(t => t === task);
+                if (index !== -1) {
+                    this.$emit('transfer-task', this.tasks.splice(index, 1)[0]);
                 }
             }
         }
@@ -236,16 +253,10 @@ Vue.component('task-finish',{
                         <p>{{ item.text }}</p>
                     </li>
                 </ul>
-                <p>Date completed: {{ finishTime(finishedTask) }}</p>
+                <p>Выполнено: {{ finishedTask.finishDate }}</p>
             </div>
         </div>
     `,
-    methods:{
-        finishTime(finishedTask){
-            let timeNow = new Date();
-            return timeNow.toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-    },
 })
 
 let app = new Vue({

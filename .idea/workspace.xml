@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c28395fa-5fc6-479f-a562-5370be0e3ef0" name="Changes" comment="оптимизация" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;StraponBace&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="1b1fe8ae-5dc5-425c-bfa1-e6b5b2eab279" />
+        <option name="url" value="https://github.com/StraponBace/lpr2_todo.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="2cNt4RS0xy4zGbdEGTY3lnrlYkj" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;JavaScript Debug.index.html.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;T:/Голова-мозг/practica_vue/lpr2&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c28395fa-5fc6-479f-a562-5370be0e3ef0" name="Changes" comment="" />
+      <created>1707963673534</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1707963673534</updated>
+      <workItem from="1707963674608" duration="7842000" />
+      <workItem from="1708050489606" duration="2474000" />
+      <workItem from="1708232237947" duration="4826000" />
+      <workItem from="1708324891820" duration="2341000" />
+      <workItem from="1708360371584" duration="216000" />
+      <workItem from="1708410400181" duration="2133000" />
+      <workItem from="1708497444698" duration="14825000" />
+      <workItem from="1708519547800" duration="1018000" />
+      <workItem from="1708597463999" duration="10963000" />
+      <workItem from="1708917849740" duration="4042000" />
+      <workItem from="1709111416026" duration="312000" />
+      <workItem from="1709113910298" duration="7243000" />
+      <workItem from="1709133566773" duration="871000" />
+      <workItem from="1709179230131" duration="264000" />
+      <workItem from="1713505206344" duration="308000" />
+    </task>
+    <task id="LOCAL-00001" summary="Start project">
+      <option name="closed" value="true" />
+      <created>1707969064649</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707969064649</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Create layout">
+      <option name="closed" value="true" />
+      <created>1707969161353</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1707969161353</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Create layout base on html and set margin&amp;padding">
+      <option name="closed" value="true" />
+      <created>1707972902420</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1707972902420</updated>
+    </task>
+    <task id="LOCAL-00004" summary="I figured out the display problem and moved the code a little into the components">
+      <option name="closed" value="true" />
+      <created>1708238134393</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1708238134393</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Finally I understood what the problem was with displaying the component, and also added the logic for calling task list items">
+      <option name="closed" value="true" />
+      <created>1708412579354</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1708412579354</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Ограничение на 3 задачи">
+      <option name="closed" value="true" />
+      <created>1708518858541</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1708518858541</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Кривой переход карточки и ограничения полей создания">
+      <option name="closed" value="true" />
+      <created>1708603697135</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1708603697135</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Фикс второго столбца">
+      <option name="closed" value="true" />
+      <created>1708609159104</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1708609159104</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Сборка на коленке (блокировка столбцов, время, сохранение данных в локал)">
+      <option name="closed" value="true" />
+      <created>1709120921983</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1709120921984</updated>
+    </task>
+    <task id="LOCAL-00010" summary="оптимизация">
+      <option name="closed" value="true" />
+      <created>1709121397460</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1709121397460</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Start project" />
+    <MESSAGE value="Create layout" />
+    <MESSAGE value="Create layout base on html and set margin&amp;padding" />
+    <MESSAGE value="I figured out the display problem and moved the code a little into the components" />
+    <MESSAGE value="Finally I understood what the problem was with displaying the component, and also added the logic for calling task list items" />
+    <MESSAGE value="Ограничение на 3 задачи" />
+    <MESSAGE value="Кривой переход карточки и ограничения полей создания" />
+    <MESSAGE value="Фикс второго столбца" />
+    <MESSAGE value="Сборка на коленке (блокировка столбцов, время, сохранение данных в локал)" />
+    <MESSAGE value="оптимизация" />
+    <option name="LAST_COMMIT_MESSAGE" value="оптимизация" />
+  </component>
+</project>
