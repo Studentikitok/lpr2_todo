@@ -209,7 +209,7 @@ Vue.component('task-on-start', {
 })
 
 Vue.component('task-process', {
-    props: ['completedTasks', 'tasks'],
+    props: ['completedTasks'],
     template: `
         <div class="task-process">
             <h3>Task processed</h3>
