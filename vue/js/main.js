@@ -11,7 +11,7 @@ Vue.component('to-do-app',{
                     <task-on-start :tasks="tasks" :completedTasks="completedTasks" @transfer-task="moveTaskToProcess"></task-on-start>
                 </div>
                 <div class="tasks">
-                    <task-process :task="processedTask" :completed-tasks="completedTasks" @transfer-task="moveTaskToFinish"></task-process>
+                    <task-process :task="tasks" :completed-tasks="completedTasks" @transfer-task="moveTaskToFinish"></task-process>
                 </div>
                 <div class="tasks">
                     <task-finish :task="completedTasks" :finished-tasks="finishedTasks"></task-finish>
@@ -22,7 +22,6 @@ Vue.component('to-do-app',{
     data() {
         return {
             tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-            processedTask: [],
             completedTasks: JSON.parse(localStorage.getItem('completedTasks')) || [],
             finishedTasks: JSON.parse(localStorage.getItem('finishedTasks')) || []
         }
@@ -60,7 +59,7 @@ Vue.component('to-do-app',{
                 this.tasks.splice(index, 1);
             }
 
-            this.processedTask = task;
+            this.task = task;
             let countChecked = task.items.filter(item => item.checked).length;
             if (countChecked >= Math.ceil(task.items.length / 2)) {
                 this.completedTasks.push(task);
@@ -169,11 +168,17 @@ Vue.component('task-on-start', {
         <div>
             <h3>New task</h3>
             <h4 v-if="isTaskProcessFull">Перед тем, как выполнять задачи этого столбца, выполните хотя бы одну задачу второго столбца</h4>
-            <div v-for="task in tasks" :key="task.title" class="task">
+            <div v-for="(task, index) in tasks" :key="task.title" class="task task-move"
+                draggable="true"
+                @dragstart="onDragStart(index, $event)"
+                @dragover.prevent
+                @drop="onDrop(index, $event)"
+                @dragend="onDragEnd"
+            >
                 <h3>{{ task.title }}</h3>
                 <ul>
                     <li v-for="item in task.items" :key="item.id">
-                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task, completedTasks)" :disabled="isTaskProcessFull"> 
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(task, completedTasks)" :disabled="isTaskProcessFull || ifChecked(item)"> 
                         <p>{{ item.text }}</p>
                     </li>
                 </ul>
@@ -204,6 +209,29 @@ Vue.component('task-on-start', {
                     this.$emit('transfer-task', this.tasks.splice(index, 1)[0]);
                 }
             }
+        },
+        ifChecked(item){
+            return item.checked;
+        },
+        onDragStart(index, event) {
+            event.dataTransfer.setData('text/plain', index);
+            event.dataTransfer.effectAllowed = 'move';
+            this.draggedIndex = index;
+        },
+        onDragOver(event) {
+            event.preventDefault();
+        },
+        onDrop(index, event) {
+            const droppedIndex = parseInt(event.dataTransfer.getData('text/plain'), 10);
+    
+            if (droppedIndex !== index) {
+                const movedItem = this.tasks[droppedIndex];
+                this.$set(this.tasks, droppedIndex, this.tasks[index]);
+                this.$set(this.tasks, index, movedItem);
+            }
+        },
+        onDragEnd(event) {
+            this.draggedIndex = null;
         }
     }
 })
@@ -213,11 +241,17 @@ Vue.component('task-process', {
     template: `
         <div class="task-process">
             <h3>Task processed</h3>
-            <div v-for="completedTask in completedTasks" :key="completedTask.title" class="task">
+            <div v-for="(completedTask, index) in completedTasks" :key="completedTask.title" class="task task-move"
+                draggable="true"
+                @dragstart="onDragStart(index, $event)"
+                @dragover.prevent
+                @drop="onDrop(index, $event)"
+                @dragend="onDragEnd"
+            >
                 <h3>{{ completedTask.title }}</h3>
                 <ul>
                     <li v-for="item in completedTask.items" :key="item.id">
-                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(completedTask, item); checkItems(completedTask)">
+                        <input type="checkbox" :id="item.id" v-model="item.checked" @change="checkItems(completedTask, item); checkItems(completedTask)" :disabled="ifChecked(item)">
                         <p :class="{ 'completed': item.checked }">{{ item.text }}</p>
                     </li>
                 </ul>
@@ -237,6 +271,29 @@ Vue.component('task-process', {
                     this.$emit('transfer-task', this.completedTasks.splice(index, 1)[0]);
                 }
             }
+        },
+        ifChecked(item){
+            return item.checked;
+        },
+        onDragStart(index, event) {
+            event.dataTransfer.setData('text/plain', index);
+            event.dataTransfer.effectAllowed = 'move';
+            this.draggedIndex = index;
+        },
+        onDragOver(event) {
+            event.preventDefault();
+        },
+        onDrop(index, event) {
+            const droppedIndex = parseInt(event.dataTransfer.getData('text/plain'), 10);
+    
+            if (droppedIndex !== index) {
+                const movedItem = this.completedTasks[droppedIndex];
+                this.$set(this.completedTasks, droppedIndex, this.completedTasks[index]);
+                this.$set(this.completedTasks, index, movedItem);
+            }
+        },
+        onDragEnd(event) {
+            this.draggedIndex = null;
         }
     }
 })

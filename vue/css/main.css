@@ -27,28 +27,44 @@ header{
     width: 300px;
     gap: 5px;
     word-wrap: break-word;
+    background: #f9f9f9;
+    border: 1px solid #485681;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.task-move{
+    cursor: move;
 }
 
 .task > ul > li{
     display: flex;
     align-items: center;
-    word-wrap: break-word;
+    
 }
 
 .task > ul, p{
     margin: 1px;
     padding: 0px;
+    word-wrap: break-word;
 }
 
 .task > h3{
     margin-bottom: 5px;
+    margin-top: 0;
 }
 
 .tasks{
     display: flex;
     justify-content: center;
-    gap: 20px;
     width: 400px;
+}
+
+.tasks > div{
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
 }
 
 main{
